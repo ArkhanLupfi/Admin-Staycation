@@ -85,7 +85,7 @@ module.exports = {
           treasures: treasure.length,
           cities: city.length
         },
-        mostPicked,
+        mostPickedItems,
         category,
         testimonial
       })
