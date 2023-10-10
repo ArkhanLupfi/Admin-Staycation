@@ -9,34 +9,10 @@ const Member = require('../models/Member');
 module.exports = {
   landingPage: async (req, res) => {
     try {
-      // const mostPicked = await Item.find()
-      //   .select('_id title country city price unit imageId')
-      //   .limit(5)
-      //   .populate({ path: 'imageId', select: '_id imageUrl' })
-      const mostPicked = await Booking.aggregate([
-        {
-          $group: {
-            _id: "$item",
-            totalBookings: { $sum: 1 } // Menghitung jumlah booking untuk setiap item
-          }
-        },
-        {
-          $sort: { totalBookings: -1 } // Mengurutkan berdasarkan jumlah booking secara descending (terbanyak ke terendah)
-        },
-        {
-          $limit: 5 // Membatasi hasil hingga 5 item teratas
-        }
-      ]);
-
-      // Mengambil detail resort berdasarkan hasil pencarian di atas dan melakukan populasi
-      const mostPickedItems = await Item.find({ _id: { $in: mostPicked.map(item => item._id) } })
+      const mostPicked = await Item.find()
         .select('_id title country city price unit imageId')
-        .populate({ path: 'imageId', select: '_id imageUrl' });
-
-      // Sekarang, 'mostPickedItems' akan berisi daftar resort yang sering di-booking beserta detailnya
-      // Anda dapat menggunakan 'mostPickedItems' untuk menampilkan data di halaman depan
-
-      // ...
+        .limit(5)
+        .populate({ path: 'imageId', select: '_id imageUrl' })
 
       const category = await Category.find()
         .select('_id name')
@@ -85,7 +61,7 @@ module.exports = {
           treasures: treasure.length,
           cities: city.length
         },
-        mostPickedItems,
+        mostPicked,
         category,
         testimonial
       })
